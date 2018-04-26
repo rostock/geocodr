@@ -6,6 +6,12 @@ setup(
     version="0.1.0",
     packages=find_packages(),
     include_package_data=True,
+    entry_points={
+        'console_scripts': [
+            'geocodr=geocodr.cli:main',
+            'geocodr-api=geocodr.api:main',
+        ],
+    },
     extras_require={
         ':python_version == "2.7"': ['futures']
     },
