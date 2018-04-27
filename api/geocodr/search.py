@@ -10,7 +10,8 @@ import json
 import shapely.geometry
 import shapely.wkt
 
-from . import proj
+from geocodr import proj
+from geocodr.lib.geom import point_on_geom
 
 
 class Collection(object):
@@ -92,8 +93,7 @@ class Collection(object):
             prop[self.class_title_attrib] = self.class_title
 
             if shape == 'centroid':
-                # TODO https://gis.stackexchange.com/questions/76498/how-is-st-pointonsurface-calculated
-                geom = geom.centroid
+                geom = point_on_geom(geom.centroid)
             elif shape == 'bbox':
                 geom = geom.envelope
 
