@@ -173,7 +173,7 @@ def create_app(config):
     return app
 
 
-if __name__ == '__main__':
+def main():
     logging.basicConfig(level=logging.INFO)
 
     import argparse
@@ -195,3 +195,7 @@ if __name__ == '__main__':
     }
     app = create_app(config)
     run_simple(args.host, args.port, app, use_debugger=True, use_reloader=True, threaded=True)
+
+
+if __name__ == '__main__':
+    main()
