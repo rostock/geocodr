@@ -111,8 +111,9 @@ class Collection(object):
     def queries_for_term(self, term):
         """
         Build queries for given `term`. The same term is searched in all
-        `qfields` (OR) by default. If a field is marked as `exclusive` and if
-        it returns a query, then we only return this query (useful if a Field
+        `qfields` (OR) by default.
+        If one or more fields are marked as `exclusive` and if they return a
+        query, then we only search in these fields (useful if a Field
         implementation detects that the value should only be searched in one
         field, e.g. a housnumber or zipcode).
         """
@@ -121,9 +122,13 @@ class Collection(object):
             part = f.query(term)
             if not part:
                 continue
-            if part and is_exclusive(part):
-                return part
             parts.append(part)
+
+        # Only use exclusive parts (fields wrapped with Only) if at least one
+        # part is marked as exclusive.
+        if any(is_exclusive(part) for part in parts):
+            parts = [p for p in parts if is_exclusive(p)]
+
         return u' OR '.join(parts)
 
     def query(self, query):
