@@ -106,7 +106,7 @@ class Geocodr(object):
 
         fc = FeatureCollection()
 
-        if not request.g.is_reverse and len(request.q.query.strip()) < 3:
+        if not request.g.is_reverse and len(request.g.query.strip()) < 3:
             # return empty result for short queries
             return self.json_resp(request, fc.as_mapping())
 
