@@ -59,8 +59,8 @@ class Geocodr(object):
         }
         data = json.dumps(data, sort_keys=True, indent=2)
 
-        if 'jsonp' in request.args:
-            data = '{}({});'.format(request.args['jsonp'], data)
+        if 'callback' in request.args:
+            data = '{}({});'.format(request.args['callback'], data)
             headers['Content-Type'] = 'application/javascript'
 
         if 'gzip' in request.accept_encodings:
