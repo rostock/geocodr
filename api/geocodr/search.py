@@ -15,14 +15,19 @@ from geocodr.lib.geom import point_on_geom
 
 
 class Collection(object):
-    name = 'unknown_collection'
+    name = ''
     title = 'Unknown collection'
     class_ = 'unknown_class'
     class_title = 'Unknown class'
 
     jsonblob_field = 'json'
 
+    """
+    fields are always loaded from the result doc and will overwrite properties
+    from jsonblob_field.
+    """
     fields = ()
+
     qfields = ()
     geometry_field = 'geometry'
     field_list = '*,score,geometry:[geo f=geometry w=WKT]'
@@ -83,12 +88,12 @@ class Collection(object):
             for f in self.fields:
                 prop[f] = doc.get(f)
 
-            prop['_title_'] = self.to_title(doc)
             prop['_score_'] = doc['score']
             prop['_sort_tiebreaker_'] = self.sort_tiebreaker(doc)
             prop['_id_'] = doc['id']
             prop['_collection_'] = self.name
             prop['_class_'] = self.class_
+            prop['_title_'] = self.to_title(prop)
             prop[self.collection_title_attrib] = self.title
             prop[self.class_title_attrib] = self.class_title
 
@@ -105,8 +110,15 @@ class Collection(object):
             features.append(feature)
         return features
 
-    def to_title(self, doc):
-        return ', '.join(doc.get(f, u'∅') for f in self.fields)
+    def to_title(self, prop):
+        """
+        Concatenate fields from search result for human-readable title.
+        """
+        parts = []
+        for f in self.fields:
+            if prop.get(f):
+                parts.append(prop[f])
+        return u', '.join(parts)
 
     def queries_for_term(self, term):
         """

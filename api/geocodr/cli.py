@@ -89,7 +89,10 @@ def main():
             if k in (args.explain or ()):
                 for doc in resp['response']['docs']:
                     if k == doc['id']:
-                        print(k, collection.to_title(doc), file=sys.stderr)
+                        # build feature to get final title
+                        features = collection.to_features([doc])
+                        title = features[0]['properties']['_title_']
+                        print(k, title, file=sys.stderr)
                 print(v, file=sys.stderr)
                 print('-' * 80, file=sys.stderr)
 

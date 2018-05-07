@@ -24,6 +24,7 @@ def load_collections(fname):
             inspect.isclass(v)
             and issubclass(v, Collection)
             and v != Collection
+            and v.name
         ):
             coll = v()
             if src_proj:
