@@ -121,7 +121,7 @@ class Geocodr(object):
                 kw.update(
                     spatial_filter.query_params(collection.geometry_field)
                 )
-            print(q)
+
             resp = self.solr.query(
                 collection=collection.name,
                 q=q,
