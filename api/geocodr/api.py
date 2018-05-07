@@ -150,8 +150,8 @@ class Geocodr(object):
                 try:
                     features = f.result()
                     fc.add_features(features)
-                except Exception as ex:
-                    log.error(ex)
+                except Exception:
+                    log.exception('fetching result for collection %s', collection.name)
                     return self.json_error(request, 500, 'internal error')
 
         fc.sort(limit=request.g.limit, distance=request.g.is_reverse)
