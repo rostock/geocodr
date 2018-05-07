@@ -249,6 +249,22 @@ class Only(Field):
             return Exclusive(self.qfield.query(term))
 
 
+class PatternReplace(Field):
+    """
+    PatternReplace wraps an existing field and replaces regexp with repl before
+    creating the query with qfield.query.
+    A boost must be applied to the qfield and not this wrapper.
+    """
+    def __init__(self, regexp, repl, qfield):
+        self.regexp = re.compile(regexp)
+        self.repl = repl
+        self.qfield = qfield
+
+    def query(self, term):
+        term = self.regexp.sub(self.repl, term)
+        return self.qfield.query(term)
+
+
 class Exclusive(str):
     """
     Mark a query as exclusive, i.e. ignore other queries for the same term.
