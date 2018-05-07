@@ -65,8 +65,9 @@ class GeocodrParams(object):
 
     @cached_property
     def dst_proj(self):
-        if self.type == 'reverse':
-            # param required for reverse
+        if (self.type == 'reverse'
+            and not ('bbox' in self.params or 'peri_coord' in self.params)):
+            # param required for reverse (but not for bbox/peri)
             epsg = self.params.get('in_epsg')
         else:
             epsg = self.params.get('out_epsg', default=None)
