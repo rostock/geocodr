@@ -54,7 +54,7 @@ class Geocodr(object):
 
     def json_resp(self, request, data, code=200):
         headers = {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json; charset=utf-8',
             'Access-Control-Allow-Origin': '*',
         }
         data = json.dumps(data, sort_keys=True, indent=2)
