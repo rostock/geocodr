@@ -1,11 +1,12 @@
+# -:- encoding: utf-8 -:-
 import re
 from collections import namedtuple
 
 flst = namedtuple('flst', [
-    'gemarkung', # 6
-    'flur',  # 3
-    'zaehler', # 5
-    'nenner', # 4
+    'gemarkung',  # 6
+    'flur',       # 3
+    'zaehler',    # 5
+    'nenner',     # 4
     'gemarkung_name',
 ])
 
@@ -24,9 +25,16 @@ flst_re = re.compile(r'''
     re.VERBOSE | re.IGNORECASE
 )
 
-def parse_flst(token):
+
+def parse_flst(token, gemarkung_prefix=None):
     """
+    Parse German parcel identifications (Flurstücksnummern).
+    gemarkung_prefix is the state-wide prefix used to convert 4-digit
+    Gemarkungsnummern to 6-digit.
+
     >>> parse_flst("123456")
+    flst(gemarkung='123456', flur='', zaehler='', nenner='', gemarkung_name='')
+    >>> parse_flst("3456", gemarkung_prefix='12')
     flst(gemarkung='123456', flur='', zaehler='', nenner='', gemarkung_name='')
     >>> parse_flst("123456-56-1/2")
     flst(gemarkung='123456', flur='056', zaehler='00001', nenner='0002', gemarkung_name='')
@@ -39,6 +47,8 @@ def parse_flst(token):
     flst(gemarkung='132232', flur='001', zaehler='00123', nenner='0001', gemarkung_name='')
     >>> parse_flst("13223200100123")
     flst(gemarkung='132232', flur='001', zaehler='00123', nenner='', gemarkung_name='')
+    >>> parse_flst("223200100123", gemarkung_prefix='13')
+    flst(gemarkung='132232', flur='001', zaehler='00123', nenner='', gemarkung_name='')
 
     >>> parse_flst("132232 flur 1")
     flst(gemarkung='132232', flur='001', zaehler='', nenner='', gemarkung_name='')
@@ -46,19 +56,30 @@ def parse_flst(token):
     flst(gemarkung='', flur='001', zaehler='', nenner='', gemarkung_name='flurbezirk ii')
     >>> parse_flst("123232 1, 157")
     flst(gemarkung='123232', flur='001', zaehler='00157', nenner='', gemarkung_name='')
+    >>> parse_flst("3232 1, 157", gemarkung_prefix='12')
+    flst(gemarkung='123232', flur='001', zaehler='00157', nenner='', gemarkung_name='')
     >>> parse_flst("123232 1, 157/1")
     flst(gemarkung='123232', flur='001', zaehler='00157', nenner='0001', gemarkung_name='')
     >>> parse_flst("Krummendorf 1 157")
     flst(gemarkung='', flur='001', zaehler='00157', nenner='', gemarkung_name='Krummendorf')
     """
+
+    # Add state prefix for Gemarkungen if token starts with numbers but not
+    # with our prefix.
+    if (gemarkung_prefix
+        and re.match('^\d{4,4}', token)
+        and not token.startswith(gemarkung_prefix)
+    ):
+        token = gemarkung_prefix + token
     match = flst_re.match(token)
-    if match:
-        g = match.groupdict()
-        return flst(
-            gemarkung_name=(g['gemarkung_name'] or '').strip(),
-            gemarkung=g['gemarkung'] or '',
-            flur='%03d' % int(g['flur']) if g['flur'] else '',
-            zaehler='%05d' % int(g['zaehler']) if g['zaehler'] else '',
-            nenner='%04d' % int(g['nenner']) if g['nenner'] else '',
-        )
-        return flst(match.groupdict())
+    if not match:
+        return
+    g = match.groupdict()
+    return flst(
+        gemarkung_name=(g['gemarkung_name'] or '').strip(),
+        gemarkung=g['gemarkung'] or '',
+        flur='%03d' % int(g['flur']) if g['flur'] else '',
+        zaehler='%05d' % int(g['zaehler']) if g['zaehler'] else '',
+        nenner='%04d' % int(g['nenner']) if g['nenner'] else '',
+    )
+    return flst(match.groupdict())
