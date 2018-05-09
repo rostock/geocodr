@@ -67,6 +67,8 @@ class Geocodr(object):
             data = '{}({});'.format(request.args['callback'], data)
             headers['Content-Type'] = 'application/javascript'
 
+        data = data.encode('utf-8')
+
         if 'gzip' in request.accept_encodings:
             data = gzip_data(data)
             headers['Content-Encoding'] = 'gzip'
@@ -144,7 +146,7 @@ class Geocodr(object):
             )
 
         # query in parallel
-        with ThreadPoolExecutor() as e:
+        with ThreadPoolExecutor(max_workers=4) as e:
             futures = []
             for collection in self.collections:
                 if collection.class_ not in req_classes:

@@ -174,7 +174,7 @@ class GeocodrRequest(Request):
     @cached_property
     def json(self):
         if self.headers.get('content-type') == 'application/json':
-            return json.loads(self.data)
+            return json.loads(self.data.decode('utf-8'))
 
     @cached_property
     def g(self):

@@ -1,6 +1,7 @@
 """
 solr module provides an API for communication with Solr
 """
+from __future__ import unicode_literals
 import re
 
 import requests
@@ -49,15 +50,12 @@ class Solr(object):
             raise SolrException(resp)
         return resp.json()
 
-re_special_chars = re.compile(ur'[-+&|!(){}[\]^"~*?:\\/\']')
+re_special_chars = re.compile(r'[-+&|!(){}[\]^"~*?:\\/\',]')
 re_whitespace = re.compile('\s+')
 
 def strip_special_chars(query):
     """
     Replaces any Solr special character with a single whitespace.
-
-    >>> strip_special_chars(' o-+|n!)l([]\\\\"y:?/\\'  ')
-    'o n l y'
     """
     query = re_special_chars.sub(' ', query)
     query = re_whitespace.sub(' ', query)
