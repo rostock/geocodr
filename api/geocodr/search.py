@@ -12,6 +12,7 @@ import shapely.wkt
 
 from geocodr import proj
 from geocodr.lib.geom import point_on_geom
+from geocodr.solr import strip_special_chars
 
 
 class Collection(object):
@@ -144,7 +145,7 @@ class Collection(object):
         return u' OR '.join(parts)
 
     def query(self, query):
-        query = query.replace(u',', u' ')
+        query = strip_special_chars(query)
         qparts = []
         for term in query.split(u' '):
             if not term:
