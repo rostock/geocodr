@@ -18,6 +18,7 @@ from geocodr.mapping import load_collections
 from geocodr.request import (
     DefaultRequestParams,
     GeocodrRequest,
+    RequestError,
 )
 
 
@@ -44,10 +45,13 @@ class Geocodr(object):
         try:
             endpoint, values = adapter.match()
             return getattr(self, 'on_' + endpoint)(request, **values)
+        except RequestError as e:
+            return self.json_error(request, 400, e.reason)
         except ValueError as e:
-            return self.json_error(request, 400, e.message)
-        except HTTPException as e:
-            return e
+            return self.json_error(request, 400, 'Invalid parameter value: ' + str(e))
+        except Exception as e:
+            log.exception("Dispatching query {}".format(request), e)
+            return self.json_error(request, 500, 'Internal error')
 
     def json_error(self, request, code, msg):
         return self.json_resp(request, {'status': code, 'message': msg}, code=code)
@@ -88,7 +92,7 @@ class Geocodr(object):
                 if cls == collection.class_:
                     break
             else:
-                return self.json_error(request, 400, 'invalid class "{}"'.format(cls))
+                return self.json_error(request, 400, "Invalid class '{}'".format(cls))
 
     def on_query(self, request):
 
@@ -109,6 +113,7 @@ class Geocodr(object):
         if not request.g.is_reverse and len(request.g.query.strip()) < 3:
             # return empty result for short queries
             return self.json_resp(request, fc.as_mapping())
+
 
         def query(collection):
             if request.g.is_reverse:
@@ -151,8 +156,8 @@ class Geocodr(object):
                     features = f.result()
                     fc.add_features(features)
                 except Exception:
-                    log.exception('fetching result for collection %s', collection.name)
-                    return self.json_error(request, 500, 'internal error')
+                    log.exception("Fetching result for collection '%s'", collection.name)
+                    return self.json_error(request, 500, 'Internal error.')
 
         fc.sort(limit=request.g.limit, distance=request.g.is_reverse)
 

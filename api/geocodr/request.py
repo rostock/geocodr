@@ -13,6 +13,14 @@ from geocodr import proj
 from geocodr.search import SpatialFilter
 
 
+class RequestError(Exception):
+    def __init__(self, reason):
+        self.reason = reason
+
+    def __str__(self):
+        return self.reason
+
+
 class DefaultRequestParams(object):
     def __init__(self, data_proj=proj.epsg(25833), reverse_radius=50):
         self.data_proj = data_proj
@@ -37,7 +45,7 @@ class GeocodrParams(object):
     def type(self):
         t = self.params.get('type')
         if t not in ('search', 'reverse'):
-            raise ValueError('invalid type "{}"'.format(t))
+            raise RequestError("Invalid request type. Supported: search or reverse. Got: '{}'".format(t))
         return t
 
     @cached_property
@@ -60,7 +68,7 @@ class GeocodrParams(object):
     def shape(self):
         shape = self.params.get('shape', 'geometry')
         if shape not in ('geometry', 'centroid', 'bbox'):
-            raise ValueError('invalid shape "{}"'.format(shape))
+            raise RequestError("Invalid shape value. Supported: geometry, centroid or bbox. Got: '{}'".format(shape))
         return shape
 
     @cached_property
@@ -132,7 +140,7 @@ class JSONParams(object):
             if key in self.doc:
                 return self.doc[key]
             else:
-                raise ValueError("{} not in request".format(key))
+                raise RequestError("Parameter '{}' is required for this request.".format(key))
         else:
             return self.doc.get(key, default)
 
@@ -149,7 +157,7 @@ class GETParams(object):
             if key in self.args:
                 return self.args[key]
             else:
-                raise ValueError("{} not in request".format(key))
+                raise RequestError("Parameter '{}' is required for this request.".format(key))
         else:
             return self.args.get(key, default)
 
