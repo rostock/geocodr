@@ -10,6 +10,7 @@ from werkzeug.utils import cached_property
 from werkzeug.wrappers import Request
 
 from geocodr import proj
+from geocodr.solr import strip_special_chars
 from geocodr.search import SpatialFilter
 
 
@@ -39,7 +40,7 @@ class GeocodrParams(object):
 
     @cached_property
     def query(self):
-        return self.params.get('query')
+        return strip_special_chars(self.params.get('query'))
 
     @cached_property
     def type(self):

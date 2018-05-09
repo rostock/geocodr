@@ -98,7 +98,7 @@ def main():
 
     result = FeatureCollection()
 
-    args.query = args.query.decode('utf-8')
+    args.query = solr.strip_special_chars(args.query)
 
     def query(collection):
         q = collection.query(args.query)
