@@ -191,6 +191,8 @@ class NGramField(Field):
         return u"{{!edismax qf={0} v='{1}' mm='2<-1 4<-2 6<-3 8<-4'}}^{2:.2}".format(
             self.field,
             u' '.join(grams),
+            # divide by number of grams as score and boost is applied for each
+            # matched gram
             1.0/len(grams)*self.boost,
         )
 
@@ -200,6 +202,8 @@ class SimpleField(Field):
         self.field = field
 
     def query(self, term):
+        if not term:
+            return
         q = u'{}:{}'.format(self.field, term)
         if self.boost != 1.0:
             q += '^{:.2}'.format(self.boost)
