@@ -195,24 +195,6 @@ class NGramField(Field):
         )
 
 
-class EdgeNGramField(Field):
-    def __init__(self, field, min_gram=3, max_gram=8):
-        self.field = field
-        self.min_gram = min_gram
-        self.max_gram = max_gram
-
-    def tokenize(self, input):
-        grams = []
-        for n in range(self.min_gram, self.max_gram+1):
-            grams.append(input[:n])
-        return grams
-
-    def query(self, term):
-        grams = self.tokenize(term)
-        return u"{{!edismax qf={0} v='{1}' mm='100%'}}".format(
-            self.field, u' '.join(grams))
-
-
 class SimpleField(Field):
     def __init__(self, field):
         self.field = field
