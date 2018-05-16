@@ -15,6 +15,7 @@ from werkzeug.wsgi import SharedDataMiddleware
 from geocodr import solr
 from geocodr.featurecollection import FeatureCollection
 from geocodr.mapping import load_collections
+from geocodr.keys import APIKeys
 from geocodr.request import (
     DefaultRequestParams,
     GeocodrRequest,
@@ -31,6 +32,9 @@ class Geocodr(object):
     def __init__(self, config):
         self.solr = solr.Solr(config['solr_url'])
         self.collections = load_collections(config['mapping'])
+        self.apikeys = None
+        if config.get('api_keys_csv'):
+            self.apikeys = APIKeys(config['api_keys_csv'])
         self.data_proj = self.collections[0].src_proj
         self.default_params = DefaultRequestParams(
             data_proj=self.data_proj,
@@ -50,7 +54,7 @@ class Geocodr(object):
         except ValueError as e:
             return self.json_error(request, 400, 'Invalid parameter value: ' + str(e))
         except Exception as e:
-            log.exception("Dispatching query {}".format(request), e)
+            log.exception("Dispatching query {}".format(request))
             return self.json_error(request, 500, 'Internal error')
 
     def json_error(self, request, code, msg):
@@ -97,6 +101,8 @@ class Geocodr(object):
                 return self.json_error(request, 400, "Invalid class '{}'".format(cls))
 
     def on_query(self, request):
+        if self.apikeys and not self.apikeys.is_permitted(request):
+            return self.json_error(request, 403, 'API key is invalid or not valid for this requests.')
 
         # collect all variables here so we can use them in concurrently from
         # multiple threads in query()
@@ -195,6 +201,7 @@ def main():
     parser.add_argument("--solr-url", default="http://localhost:8983/solr")
     parser.add_argument("--mapping", required=True, help='mapping file')
     parser.add_argument("--static-dir", help='optional: additional files to host at /static')
+    parser.add_argument("--api-keys", help='optional: CSV file with permitted API keys and domains')
 
     args = parser.parse_args()
 
@@ -203,6 +210,7 @@ def main():
         'solr_url': args.solr_url,
         'mapping': args.mapping,
         'static_files': args.static_dir,
+        'api_keys_csv': args.api_keys,
     }
     app = create_app(config)
     run_simple(args.host, args.port, app, use_debugger=True, use_reloader=True, threaded=True)
