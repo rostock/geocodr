@@ -149,7 +149,7 @@ def main():
     result.sort(limit=args.limit)
 
     if args.geojson:
-        print(json.dumps(result.as_mapping()))
+        print(json.dumps(result.as_mapping(), indent=2, sort_keys=True))
     else:
         for feature in result.features:
             if args.debug:
