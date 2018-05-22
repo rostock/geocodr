@@ -44,8 +44,8 @@ def test_api_key(key_file, key, referrer, permitted):
     headers = []
     if referrer:
         headers.append(('Referer', referrer))
-        builder = EnvironBuilder(method='GET',
-                                 query_string={'key': key},
-                                 headers=headers)
+    builder = EnvironBuilder(method='GET',
+                             query_string={'key': key},
+                             headers=headers)
     req = Request(builder.get_environ())
     assert a.is_permitted(req) == permitted
