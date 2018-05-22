@@ -12,7 +12,7 @@ Request methods
 
 The API supports HTTP GET requests were all parameters are passed in the query string. The API also supports HTTP POST requests were the parameters are passed in a JSON body.
 
-The GET and JSON method both use the same parameter names. All parameter names and values are case-sensitive.
+The GET and JSON methods both use the same parameter names. All parameter names and values are case-sensitive.
 
 
 Example GET request::
@@ -20,7 +20,7 @@ Example GET request::
    curl "http://localhost:5000/query?type=search&class=address&query=rostock"
 
 
-Example request with JSON::
+Same request as JSON::
 
    curl -X POST \
       --data '{"type": "search", "class": "address", "query": "rostock"}' \
@@ -34,7 +34,7 @@ Responses
 
 Geocodr always replies with a valid JSON document.
 
-For errors, a document with status and message is returned. The status is identical to the returned HTTP status.
+A document with status and message is returned in case of any error. The ``status`` is identical to the returned HTTP status.
 
 - 400 for invalid requests: Missing required parameter or invalid value.
 - 401 for unauthorized requests: Missing or invalid API-key (see XXX)
@@ -49,12 +49,14 @@ Example request with missing parameter::
    }
 
 
+GeoJSON
+~~~~~~~
+
 Successful requests result in a GeoJSON document with a `FeatureCollection` with zero or more `Features`.
 Features can contain all possible geometry types. This depends on the configuration of your data classes.
 The features are sorted by score (best matches first) or by distance for reverse geocoding queries.
 
 .. note:: All geometries are in the projection of the indexed data. Make requests with ``out_epsg=4326`` to get a GeoJSON as `specified in the standard <https://tools.ietf.org/html/rfc7946#section-4>`_ for interoperability.
-
 
 
 General parameters
