@@ -152,12 +152,17 @@ def main():
         print(json.dumps(result.as_mapping()))
     else:
         for feature in result.features:
-            print(
-                feature['properties']['_title_'],
-                feature['properties']['_score_'],
-                feature['properties']['_id_'],
-                feature['properties']['_collection_'],
-            )
+            if args.debug:
+                print(
+                    feature['properties']['_title_'],
+                    feature['properties']['_score_'],
+                    feature['properties']['_id_'],
+                    feature['properties']['_collection_'],
+                )
+            else:
+                print(
+                    feature['properties']['_title_'],
+                )
 
 
 if __name__ == '__main__':
