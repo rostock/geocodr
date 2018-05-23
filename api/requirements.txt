@@ -1,0 +1,9 @@
+certifi==2018.4.16
+chardet==3.0.4
+-e git+git@github.com:rostock/geocodr.git@2b0c83a79f86efd5be24c8aaa3c90aa20c81d605#egg=geocodr&subdirectory=api
+idna==2.6
+pyproj==1.9.5.1
+requests==2.18.4
+Shapely==1.6.4.post1
+urllib3==1.22
+Werkzeug==0.14.1
