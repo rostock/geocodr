@@ -158,3 +158,23 @@ You can use your browser or a tool like ``curl`` to make queries to the API::
 
    curl "http://127.0.0.1:5000/query?type=search&class=address&query=schulzestr"
 
+
+.. _tutorial_api_key:
+
+API keys
+~~~~~~~~
+
+Geocodr allows to restrict API requests to calls with a valid API key. :ref:`See API documentation.<api_key>`
+
+Checking for API keys can be enabled with the ``--api-keys`` option. The option takes a CSV file with all valid API keys.
+
+The CSV file requires the fields ``key`` and ``domains``. ``domains`` is semicolon separated list of one or more domains. Only requests originating from these domains are permitted. This is done by checking the HTTP ``referer`` header. Sub domains of the configured domains are permitted. 
+
+
+Example CSV file::
+
+   key,domains
+   key1,example.org
+   multikey,example.org;example.com
+
+.. note:: The ``referer`` header can be forged, so this only limits where the API can be used in public, but it does not prevent automated scripts, etc..

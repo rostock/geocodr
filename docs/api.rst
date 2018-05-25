@@ -244,3 +244,59 @@ Query up to ``limit`` features within this bounding box. Sorted by distance from
    curl "http://localhost:5000/query?type=reverse&class=address\
    &query=required+but+ignored&bbox=11.67596,54.03998,11.67763,54.04059&bbox_epsg=4326\
    &limit=100"
+
+
+Cross-Origin Resource Sharing and JSONP
+---------------------------------------
+
+By default, browsers do not allow making API calls from a different domain for security reasons.
+
+Geocodr sends an ``Access-Control-Allow-Origin: *`` header with each response to allow this `Cross-Origin Resource Sharing <https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS>`_.
+
+The ``Access-Control-Allow-Origin`` header `is supported by most browsers <https://caniuse.com/#search=cors>`_. Geocodr also supports `JSONP <https://en.wikipedia.org/wiki/JSONP>`_ if you need to support older browsers. 
+
+Use the ``callback`` parameter to pass your JSONP function name to the API. Unlike other parameters, ``callback`` must be passed as a query parameter even for JSON POST requests.
+
+.. list-table::
+   :widths: 10 20 40 30
+   :header-rows: 1
+
+   *  - Name
+      - Example
+      - Description
+      - Required
+   *  - ``callback``
+      - `mycallback`
+      - JSONP callback implemented by the caller.
+      - Yes, if ``Access-Control-Allow-Origin`` is not supported
+
+::
+
+   % curl "http://localhost:5000/query?type=search&class=address&query=rostock&callback=mycallback"
+   mycallback({
+     "features": [
+       {
+         "geometry": {
+   ...
+
+
+.. _api_key:
+
+API key
+-------
+
+Geocodr allows to restrict API requests to calls with a valid API key. :ref:`Read the tutorial on how to enable this. <tutorial_api_key>` Unlike other parameters, ``key`` must be passed as a query parameter even for JSON POST requests.
+
+
+.. list-table::
+   :widths: 10 20 40 30
+   :header-rows: 1
+
+   *  - Name
+      - Example
+      - Description
+      - Required
+   *  - ``key``
+      - `abc`
+      - Valid API key.
+      - Yes (if API keys are enabled)
