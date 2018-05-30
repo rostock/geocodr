@@ -6,6 +6,8 @@ from __future__ import print_function
 import json
 import gzip
 import io
+import os
+
 from concurrent.futures import ThreadPoolExecutor
 from werkzeug.exceptions import HTTPException
 from werkzeug.routing import Map, Rule
@@ -197,11 +199,12 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--host", default="127.0.0.1")
-    parser.add_argument("--port", default=5000)
+    parser.add_argument("--port", type=int, default=5000)
     parser.add_argument("--solr-url", default="http://localhost:8983/solr")
     parser.add_argument("--mapping", required=True, help='mapping file')
     parser.add_argument("--static-dir", help='optional: additional files to host at /static')
     parser.add_argument("--api-keys", help='optional: CSV file with permitted API keys and domains')
+    parser.add_argument("--develop", action='store_true', help='start in development mode (reload on code changes)')
 
     args = parser.parse_args()
 
@@ -213,7 +216,13 @@ def main():
         'api_keys_csv': args.api_keys,
     }
     app = create_app(config)
-    run_simple(args.host, args.port, app, use_debugger=True, use_reloader=True, threaded=True)
+    if args.develop:
+        run_simple(args.host, args.port, app,
+                   extra_files=[os.path.abspath(args.mapping)],
+                   use_debugger=True, use_reloader=True, threaded=True)
+    else:
+        import waitress
+        waitress.serve(app, host=args.host, port=args.port)
 
 
 if __name__ == '__main__':

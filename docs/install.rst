@@ -35,8 +35,8 @@ Packaging
 
 You can build packages for installation on a server with the following command::
 
-   (cd api && python setup.py bdist_wheel)
-   (cd import && python setup.py bdist_wheel)
+   (cd api && python setup.py bdist_wheel --universal)
+   (cd import && python setup.py bdist_wheel --universal)
 
 
 The built packages are placed in ``{api,import}/dist`` and can be installed with ``pip install geocodr*.whl``.

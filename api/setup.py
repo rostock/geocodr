@@ -20,5 +20,6 @@ setup(
         'requests',
         'pyproj',
         'shapely',
+        'waitress',
     ],
 )

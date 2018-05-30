@@ -159,6 +159,10 @@ You can use your browser or a tool like ``curl`` to make queries to the API::
    curl "http://127.0.0.1:5000/query?type=search&class=address&query=schulzestr"
 
 
+``geocodr-api`` uses `Waitress, a production-quality pure-Python web server <https://docs.pylonsproject.org/projects/waitress/en/latest/>`_. However, it is still recommended to put it behind an HTTP Proxy (like Nginx or Apache mod_proxy) for features like HTTPS.
+
+For development of Geocodr and configuring your Geocodr mapping, you can use the ``geocodr-api --develop`` option. This will automatically reload Geocodr when the application or your mapping file was changed.
+
 .. _tutorial_api_key:
 
 API keys
@@ -168,7 +172,7 @@ Geocodr allows to restrict API requests to calls with a valid API key. :ref:`See
 
 Checking for API keys can be enabled with the ``--api-keys`` option. The option takes a CSV file with all valid API keys.
 
-The CSV file requires the fields ``key`` and ``domains``. ``domains`` is semicolon separated list of one or more domains. Only requests originating from these domains are permitted. This is done by checking the HTTP ``referer`` header. Sub domains of the configured domains are permitted. 
+The CSV file requires the fields ``key`` and ``domains``. ``domains`` is semicolon separated list of one or more domains. Only requests originating from these domains are permitted. This is done by checking the HTTP ``referer`` header. Sub domains of the configured domains are permitted.
 
 
 Example CSV file::
