@@ -231,7 +231,9 @@ class Only(Field):
 
     def query(self, term):
         if self.regexp.match(term):
-            return Exclusive(self.qfield.query(term))
+            q = self.qfield.query(term)
+            if q: # check to avoid None being converted to Exclusive/str
+                return Exclusive(q)
 
 
 class PatternReplace(Field):
