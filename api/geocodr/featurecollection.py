@@ -34,7 +34,7 @@ class FeatureCollection(object):
         for feature in self.features:
             prop = feature['properties']
             for k in list(prop.keys()):
-                if k and k[0] == '_':
+                if k and k[0] == '_' and k != '_title_':
                     del prop[k]
 
     def as_mapping(self):
