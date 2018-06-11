@@ -30,6 +30,13 @@ class FeatureCollection(object):
         if limit:
             self.features = self.features[:limit]
 
+    def filter_internal_properties(self):
+        for feature in self.features:
+            prop = feature['properties']
+            for k in list(prop.keys()):
+                if k and k[0] == '_':
+                    del prop[k]
+
     def as_mapping(self):
         return {
             'type': 'FeatureCollection',

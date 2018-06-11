@@ -171,6 +171,9 @@ class Geocodr(object):
 
         fc.sort(limit=request.g.limit, distance=request.g.is_reverse)
 
+        if request.args.get('debug', '').lower() != 'true':
+            fc.filter_internal_properties()
+
         return self.json_resp(request, fc.as_mapping())
 
 
