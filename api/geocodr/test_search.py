@@ -4,6 +4,7 @@ import pytest
 from geocodr.search import (
     SimpleField,
     NGramField,
+    GermanNGramField,
     PrefixField,
     Only,
     is_exclusive,
@@ -11,6 +12,7 @@ from geocodr.search import (
 
 @pytest.mark.parametrize('input,boost,output', [
     ['', None, None],
+    ['st', None, None],
     ['str', None, "{!edismax qf=gramfield v='str' mm='2<-1 4<-2 6<-3 8<-4'}^1.0"],
     ['stral', None, "{!edismax qf=gramfield v='str tra ral' mm='2<-1 4<-2 6<-3 8<-4'}^0.33"],
     ['strals', None, "{!edismax qf=gramfield v='str tra ral als' mm='2<-1 4<-2 6<-3 8<-4'}^0.25"],
@@ -20,6 +22,16 @@ def test_ngram(input, boost, output):
     f = NGramField('gramfield') ^ (boost or 1.0)
     assert f.query(input) == output
 
+@pytest.mark.parametrize('input,boost,output', [
+    [u'', None, None],
+    [u'aß', None, "{!edismax qf=gramfield v='ass' mm='2<-1 4<-2 6<-3 8<-4'}^1.0"],
+    [u'aßa', None, "{!edismax qf=gramfield v='ass ssa' mm='2<-1 4<-2 6<-3 8<-4'}^0.5"],
+    [u'laekoerue', None, "{!edismax qf=gramfield v='lak ako kor oru' mm='2<-1 4<-2 6<-3 8<-4'}^0.25"],
+    [u'quer', 2.0, "{!edismax qf=gramfield v='que uer' mm='2<-1 4<-2 6<-3 8<-4'}^1.0"],
+])
+def test_german_ngram(input, boost, output):
+    f = GermanNGramField('gramfield') ^ (boost or 1.0)
+    assert f.query(input) == output
 
 @pytest.mark.parametrize('input,boost,output', [
     ['', None, None],

@@ -197,6 +197,39 @@ class NGramField(Field):
         )
 
 
+class GermanNGramField(NGramField):
+    """
+    Subclass of NGramField which applies the same rule as Solr GermanNormalizationFilter.
+    """
+
+    normalize_cases = {
+        u'ß': 'ss',
+        u'ä': 'a',
+        u'ae': 'a',
+        u'ö': 'o',
+        u'oe': 'o',
+        u'ü': 'u',
+        u'ue': 'u',
+    }
+    normalize_pat = re.compile('ß|ä|ae|ö|oe|ü|(?<![euioaq])ue')
+
+    def normalize_german(self, string):
+        """
+        Normalizes German characters according to the heuristics of the
+        http://snowball.tartarus.org/algorithms/german2/stemmer.html German2 snowball
+        algorithm:
+
+        - 'ß' is replaced by 'ss'
+        - 'ä', 'ö', 'ü' are replaced by 'a', 'o', 'u', respectively.
+        - 'ae' and 'oe' are replaced by 'a', and 'o', respectively.
+        - 'ue' is replaced by 'u', when not following a vowel or q.
+        """
+        return self.normalize_pat.sub(lambda m: self.normalize_cases[m.group(0)], string)
+
+    def query(self, term):
+        return NGramField.query(self, self.normalize_german(term.lower()))
+
+
 class SimpleField(Field):
     def __init__(self, field):
         self.field = field

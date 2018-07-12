@@ -91,7 +91,11 @@ We use ``NGramField`` for fuzzy search, which accepts incomplete terms and spell
 ``NGramField`` requires a Solr field with ``NGramFilterFactory`` filter.
 ``NGramField`` builds 3-grams by default. A search term `amberg` generates the `amb`, `mbe`, `ber` and `erg` tokens. Solr would return results as soon as a single 3-gram is matched. Since this is not desired for our geocoding, Geocodr builds a Solr phrase search to get finer control of the results. For `amberg` we search for the phrases `amb mbe ber erg` and require that at least 3 phrases (n-grams) match. A longer search term tolerates more missing n-grams.
 
-The boost for n-gram fields should be lower so that exact matches score higher. 
+The boost for n-gram fields should be lower so that exact matches score higher.
+
+Note that Solr analyzers and filters are not applied. You need to implement any filter in your own subclass.
+``GermanNGramField`` is such a subclass for fields with ``NGramFilterFactory`` and ``GermanNormalizationFilterFactory``.
+
 
 Prefix matches
 ~~~~~~~~~~~~~~
