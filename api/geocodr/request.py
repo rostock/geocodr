@@ -62,6 +62,10 @@ class GeocodrParams(object):
         return max(int(self.params.get('limit', default=100)), 1)
 
     @cached_property
+    def offset(self):
+        return max(int(self.params.get('offset', default=0)), 0)
+
+    @cached_property
     def classes(self):
         return self.params.get('class').split(',')
 

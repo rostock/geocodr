@@ -29,6 +29,10 @@ import logging
 log = logging.getLogger(__name__)
 
 
+# Query Solr for at least this many results. Large value is required for proper sorting
+# and paging.
+MIN_COLLECTION_ROWS = 1000
+
 class Geocodr(object):
 
     def __init__(self, config):
@@ -136,13 +140,14 @@ class Geocodr(object):
                 kw.update(
                     spatial_filter.query_params(collection.geometry_field)
                 )
-
+            print(q)
             resp = self.solr.query(
                 collection=collection.name,
                 q=q,
                 sort=collection.sort,
                 fl=collection.field_list,
-                rows=request.g.limit,
+                rows=max(request.g.limit+request.g.offset, MIN_COLLECTION_ROWS),
+                user_auth=request.g.user_auth,
                 **kw
             )
 
@@ -169,7 +174,7 @@ class Geocodr(object):
                     log.exception("Fetching result for collection '%s'", collection.name)
                     return self.json_error(request, 500, 'Internal error.')
 
-        fc.sort(limit=request.g.limit, distance=request.g.is_reverse)
+        fc.sort(limit=request.g.limit, offset=request.g.offset, distance=request.g.is_reverse)
 
         if request.args.get('debug', '').lower() != 'true':
             fc.filter_internal_properties()

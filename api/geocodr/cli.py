@@ -38,6 +38,12 @@ def main():
         help='limit number of results for each collection',
     )
     parser.add_argument(
+        "--offset",
+        type=int,
+        default=0,
+        help='start with nth result',
+    )
+    parser.add_argument(
         "--peri-coord",
         help='coordinate for perimeter filter',
     )
@@ -115,7 +121,7 @@ def main():
             # q=args.query,
             sort=collection.sort,
             fl=collection.field_list,
-            rows=args.limit,
+            rows=max(args.limit+args.offset, 1000), # see MIN_COLLECTION_ROWS in api.py
 
             **query_kw
         )
@@ -146,19 +152,21 @@ def main():
             features = f.result()
             result.add_features(features)
 
-    result.sort(limit=args.limit)
+    result.sort(limit=args.limit, offset=args.offset)
 
     if args.geojson:
         print(json.dumps(result.as_mapping(), indent=2, sort_keys=True))
     else:
+        print("Found {} results, returning {} (offset {})".format(
+            result.total_features, len(result.features), result.offset))
         for feature in result.features:
             if args.debug:
-                print(
+                print(u'{:50s} {:9.6f}  {:18s} {}'.format(
                     feature['properties']['_title_'],
                     feature['properties']['_score_'],
-                    feature['properties']['_id_'],
                     feature['properties']['_collection_'],
-                )
+                    feature['properties']['_id_'],
+                ))
             else:
                 print(
                     feature['properties']['_title_'],

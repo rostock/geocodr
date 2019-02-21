@@ -56,7 +56,26 @@ Successful requests result in a GeoJSON document with a `FeatureCollection` with
 Features can contain all possible geometry types. This depends on the configuration of your data classes.
 The features are sorted by score (best matches first) or by distance for reverse geocoding queries.
 
+The `properties` of the `FeatureCollection` contains additional metadata, like
+the total number of results, the number of returned results and the number of
+skipped results (offset). This information can be used for paging.
+
+Example `FeatureCollection` with the first 20 of 92 results::
+   {
+      "type": "FeatureCollection"
+      "properties": {
+         "features_offset": 0,
+         "features_returned": 20,
+         "features_total": 92
+      },
+      feature: [
+         ...
+      ]
+   }
+
+
 .. note:: All geometries are in the projection of the indexed data. Make requests with ``out_epsg=4326`` to get a GeoJSON as `specified in the standard <https://tools.ietf.org/html/rfc7946#section-4>`_ for interoperability.
+
 
 
 General parameters
@@ -89,6 +108,10 @@ The following parameters are valid for all requests.
       - `20`
       - Limit the number of results.
       - No. The configured default limit.
+   *  - ``offset``
+      - `40`
+      - Skips the first *n* results. Can be used for paging in combination with ``limit``.
+      - No.
    *  - ``shape``
       - ``centroid``
       - One of ``geometry`` for the original geometry, ``centroid`` for a single point of the geometry or ``bbox`` for the bounding box of the geometry.
@@ -104,11 +127,11 @@ Examples
 ~~~~~~~~
 
 Query for "Jenaplan" school::
-   
+
    curl "http://localhost:5000/query?type=search&class=school&query=jenaplan"
 
 Query centroids in EPSG:4326 of all parcels starting with the specified identifier::
-   
+
    curl "http://localhost:5000/query?type=search&class=parcel&shape=centroid\
    &query=132232001&out_epsg=4326"
 
@@ -153,7 +176,7 @@ Examples
 ~~~~~~~~
 
 Query all features within 50 meters::
-   
+
    curl "http://localhost:5000/query?type=reverse&class=address\
    &query=307663,6004522.21&in_epsg=25833&radius=50"
 
@@ -168,7 +191,7 @@ Geocodr returns all features within the spatial filter, when the filter is added
 Perimeter filter
 ~~~~~~~~~~~~~~~~
 
-Restrict search result to a perimeter. 
+Restrict search result to a perimeter.
 
 .. list-table::
    :widths: 10 20 40 30
@@ -208,7 +231,7 @@ Query up to ``limit`` features within this perimeter. Sorted by distance from ce
 Bounding box filter
 ~~~~~~~~~~~~~~~~~~~
 
-Restrict search result to a bounding box. 
+Restrict search result to a bounding box.
 
 .. list-table::
    :widths: 10 20 40 10 20
@@ -253,7 +276,7 @@ By default, browsers do not allow making API calls from a different domain for s
 
 Geocodr sends an ``Access-Control-Allow-Origin: *`` header with each response to allow this `Cross-Origin Resource Sharing <https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS>`_.
 
-The ``Access-Control-Allow-Origin`` header `is supported by most browsers <https://caniuse.com/#search=cors>`_. Geocodr also supports `JSONP <https://en.wikipedia.org/wiki/JSONP>`_ if you need to support older browsers. 
+The ``Access-Control-Allow-Origin`` header `is supported by most browsers <https://caniuse.com/#search=cors>`_. Geocodr also supports `JSONP <https://en.wikipedia.org/wiki/JSONP>`_ if you need to support older browsers.
 
 Use the ``callback`` parameter to pass your JSONP function name to the API. Unlike other parameters, ``callback`` must be passed as a query parameter even for JSON POST requests.
 
