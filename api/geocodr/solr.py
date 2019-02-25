@@ -7,6 +7,9 @@ import re
 import requests
 
 
+class SolrUnauthenticatedError(Exception):
+    pass
+
 class SolrException(Exception):
     def __init__(self, resp):
         try:
@@ -37,7 +40,7 @@ class Solr(object):
         self._s.mount('http://', a)
         self._s.mount('https://', a)
 
-    def query(self, collection, q, **kw):
+    def query(self, collection, q, user_auth=None, **kw):
         """
         Send query `q` for `collection` to Solr. Returns the JSON response as a dict.
         Additional `kw` parameters are sent as further GET parameters.
@@ -45,7 +48,9 @@ class Solr(object):
         """
         kw['q'] = q
         resp = self._s.get(
-            '{}/{}/select'.format(self.url, collection), params=kw)
+            '{}/{}/select'.format(self.url, collection), params=kw, auth=user_auth)
+        if resp.status_code == 401:
+            raise SolrUnauthenticatedError()
         if not resp.ok:
             raise SolrException(resp)
         return resp.json()

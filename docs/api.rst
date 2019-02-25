@@ -61,6 +61,7 @@ the total number of results, the number of returned results and the number of
 skipped results (offset). This information can be used for paging.
 
 Example `FeatureCollection` with the first 20 of 92 results::
+
    {
       "type": "FeatureCollection"
       "properties": {
@@ -323,3 +324,30 @@ Geocodr allows to restrict API requests to calls with a valid API key. :ref:`Rea
       - `abc`
       - Valid API key.
       - Yes (if API keys are enabled)
+
+
+.. _api_user_password:
+
+User/Password authentication
+----------------------------
+
+Geocodr allows to restrict API requests to calls with a valid username and password. Geocodr only passes these information to Solr and you need to configure Solr to handle Basic-Authentication.
+:ref:`Read the tutorial on how to enable this. <tutorial_user_password>`
+
+This authentication has higher precedence then API keys, i.e. "key" is ignored when "user" and "password" is provided.
+
+The ``user`` and ``password`` parameter are only supported inside JSON POST requests, to prevent that the password appears in log files.
+
+
+.. list-table::
+   :widths: 10 20
+   :header-rows: 1
+
+   *  - Name
+      - Example
+   *  - ``user``
+      - `tom`
+   *  - ``password``
+      - `tomssecurepassword`
+
+

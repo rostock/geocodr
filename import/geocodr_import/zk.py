@@ -31,6 +31,8 @@ def main():
     parser.add_argument("--config-dir", required=True, help='directory for configs')
     parser.add_argument('configs', metavar='CONFIG', nargs='*',
                     help='config names')
+    parser.add_argument("--security", action='store_true',
+                        help='--pull or --push this file to/from security.json and exit')
 
 
     args = parser.parse_args()
@@ -44,6 +46,19 @@ def main():
         args.configs = []
         for config in glob(path.join(args.config_dir, '*-schema.xml')):
             args.configs.append(path.basename(config)[:-len('-schema.xml')])
+
+    if args.security:
+        if args.pull:
+            content, md = client.get('/security.json')
+            with open(path.join(args.config_dir, 'security.json'), 'wb') as f:
+                f.write(content)
+        elif args.push:
+            with open(path.join(args.config_dir, 'security.json'), 'rb') as f:
+                content = f.read()
+            client.set('/security.json', content)
+        else:
+            log.error("--security option requires --pull or --push")
+            return
 
     if args.list_configs:
         for config in client.get_children('/configs'):

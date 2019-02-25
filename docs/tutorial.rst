@@ -182,3 +182,41 @@ Example CSV file::
    multikey,example.org;example.com
 
 .. note:: The ``referer`` header can be forged, so this only limits where the API can be used in public, but it does not prevent automated scripts, etc..
+
+
+.. _tutorial_user_password:
+
+User/Password Authentication
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Geocodr can pass client provided usernames and passwords to Solr if you enable this with the ``--enable-solr-basic-auth`` option.
+
+Please refer to the `Solr documentation on how to enable Basic Authentication. <https://lucene.apache.org/solr/guide/7_3/basic-authentication-plugin.html>`_
+Basic Authentication can be used on combination with the `Rule-Based Authorization Plugin <https://lucene.apache.org/solr/guide/7_3/rule-based-authorization-plugin.html>`_ for fine grained access control to specific collections.
+
+
+For convenience, you can use the ``geocodr-zk`` to pull and push the ``security.json`` file.
+
+To pull the ``security.json`` file to ``example/solr/``::
+
+   geocodr-zk --zk-hosts localhost:9983 --config-dir example/solr/ --pull --security
+
+To push the ``security.json`` file from ``example/solr/``::
+
+   geocodr-zk --zk-hosts localhost:9983 --config-dir example/solr/ --push --security
+
+
+Adding users can be accomplished by editing and `pushing` the ``security.json`` file, or by using the Solr REST-API::
+
+   curl http://localhost:8983/solr/admin/authentication -H 'Content-type:application/json' \
+      -d '{"set-user": {"tom" : "TomIsCool",
+                        "harry":"HarrysSecret"}}'
+
+
+Unauthenticated Requests
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+To permit requests without user/password (e.g. in combination with API key), you can either use the ``"blockUnknown": false`` option of the ``solr.BasicAuthPlugin``.
+Or, you can set a default username and password in the ``--solr-url`` (e.g. ``--solr-url http://user:passwd@localhost:8983/solr``). Username and passwords provided via the API will override these default values.
+

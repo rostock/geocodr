@@ -50,6 +50,15 @@ class GeocodrParams(object):
         return t
 
     @cached_property
+    def user_auth(self):
+        user = self.params.get('user', None)
+        password = self.params.get('password', None)
+        if not user or not password:
+            return
+
+        return (user, password)
+
+    @cached_property
     def is_reverse(self):
         return self.type == 'reverse'
 
@@ -149,8 +158,9 @@ class JSONParams(object):
         else:
             return self.doc.get(key, default)
 
-
 class GETParams(object):
+    restricted_params = set(('user', 'password'))
+
     def __init__(self, args):
         self.args = args
 
@@ -158,6 +168,8 @@ class GETParams(object):
         return key in self.args
 
     def get(self, key, default=RaiseMissing):
+        if key in self.restricted_params and key in self.args:
+            raise RequestError("Parameter '{}' is not permitted for GET request.".format(key))
         if default is RaiseMissing:
             if key in self.args:
                 return self.args[key]

@@ -7,13 +7,13 @@ Concepts
 
 Geocodr supports multiple `classes` of objects. You can uses classes to separate different types of objects, for example parcel information, addresses or point of interest. End-users can select one or more classes when calling the API.
 
-Each `class` contains one or more `collections`. You can use collections to build different indices for objects with different attributes. For example addresses have house numbers and street names, but neighborhoods have only a name and a city it belongs to. A Geocodr collection is tied to one Solr collection. 
+Each `class` contains one or more `collections`. You can use collections to build different indices for objects with different attributes. For example addresses have house numbers and street names, but neighborhoods have only a name and a city it belongs to. A Geocodr collection is tied to one Solr collection.
 
 
 The `tutorial <tutorial>`_ contained a single class (``address``) and two collections (``boroughs`` and ``streets``). If you had a dataset with all house numbers, then you would add that to a new collection (e.g. ``addresses`` or ``housenumbers``) belonging to the same ``address`` class.
 A dataset with shops would belong in a different class (e.g. ``pois``).
 
-Each collection is stored in a separate Solr collection. Each collection can have a different set of fields and you can configure which fields should be indexed and how they should be processed before indexing. This is configured in the Solr schema for each collection and is not specific to Geocodr. 
+Each collection is stored in a separate Solr collection. Each collection can have a different set of fields and you can configure which fields should be indexed and how they should be processed before indexing. This is configured in the Solr schema for each collection and is not specific to Geocodr.
 
 Geocodr queries each collection with your search query. These queries run in parallel. The results are merged back together to a single result set.
 The sort order is defined by the scoring which can be adjusted by your collection definition.
@@ -36,21 +36,21 @@ Please refer to the `geocodr-mv repository <https://github.com/rostock/geocodr-m
 Geocodr mapping
 ~~~~~~~~~~~~~~~
 
-Geocodr loads the definition of your collections from a mapping file. The ``geocodr`` and ``geocodr-api`` tool use the ``--mapping`` option to pass the file name of this mapping file. 
+Geocodr loads the definition of your collections from a mapping file. The ``geocodr`` and ``geocodr-api`` tool use the ``--mapping`` option to pass the file name of this mapping file.
 
-The mapping file is a Python script. Each collection is a subclass of ``geocodr.search.Collection``. 
+The mapping file is a Python script. Each collection is a subclass of ``geocodr.search.Collection``.
 
 Most mapping options can be set by class variables on your custom collection classes.
 Basic options are ``class_`` and ``name``.
 
 Here is a minimal example::
 
-   from geocodr.search import Collection 
+   from geocodr.search import Collection
 
    class Street(Collection):
       class_ = 'address'         # class for grouping similar collections
       class_title = 'Addresses'  # human readable class name
-      name = 'streets'           # name of the Solr collection 
+      name = 'streets'           # name of the Solr collection
       title = 'Streets'          # human readable name of the collection
 
 
