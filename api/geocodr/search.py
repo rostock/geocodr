@@ -41,6 +41,10 @@ class Collection(object):
     # levels).
     collection_rank = 9e99
 
+
+    # min length of accepted query string
+    min_query_length = 3
+
     class_title_attrib = '_class_title_'
     class_title_attrib = '_class_title_'
     collection_title_attrib = '_collection_title_'

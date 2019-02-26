@@ -130,12 +130,14 @@ class Geocodr(object):
 
         fc = FeatureCollection()
 
-        if not request.g.is_reverse and len(request.g.query.strip()) < 3:
-            # return empty result for short queries
-            return self.json_resp(request, fc.as_mapping())
-
 
         def query(collection):
+            if (not request.g.is_reverse
+                and len(request.g.query.strip()) < collection.min_query_length
+            ):
+                # return empty result for short queries
+                return []
+
             if request.g.is_reverse:
                 q = '*'
             else:
@@ -146,7 +148,7 @@ class Geocodr(object):
                 kw.update(
                     spatial_filter.query_params(collection.geometry_field)
                 )
-            print(q)
+
             resp = self.solr.query(
                 collection=collection.name,
                 q=q,
