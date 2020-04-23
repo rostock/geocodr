@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='geocodr',
     description="Geocoder API for Solr",
-    version="0.3.1",
+    version="0.3.2",
     packages=find_packages(),
     include_package_data=True,
     entry_points={
