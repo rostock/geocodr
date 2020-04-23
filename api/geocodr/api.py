@@ -172,16 +172,16 @@ class Geocodr(object):
             for collection in self.collections:
                 if collection.class_ not in req_classes:
                     continue
-                futures.append(e.submit(query, collection))
+                futures.append((collection.name, e.submit(query, collection)))
 
-            for f in futures:
+            for name, f in futures:
                 try:
                     features = f.result()
                     fc.add_features(features)
                 except solr.SolrUnauthenticatedError as e:
                     return self.json_error(request, 400, 'Invalid user/password')
                 except Exception:
-                    log.exception("Fetching result for collection '%s'", collection.name)
+                    log.exception("Fetching result for collection '%s'", name)
                     return self.json_error(request, 500, 'Internal error.')
 
         fc.sort(limit=request.g.limit, offset=request.g.offset, distance=request.g.is_reverse)
