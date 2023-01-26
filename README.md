@@ -1,9 +1,5 @@
-Geocodr
-=======
+# *geocodr*
 
-Geocodr provides a web API to search spatial data with Solr.
+*Geocodr* provides a web API to search spatial data with [*Apache Solr*](https://solr.apache.org/) and is written in *Python.*
 
-Geocodr is written in Python and licensed under the terms of the Apache 2 Licence.
-
-See docs/index.rst or https://geocodr.readthedocs.io/en/latest/ for more information.
-
+For more information, please see `docs/index.rst` or visit https://geocodr.readthedocs.io/en/latest/.

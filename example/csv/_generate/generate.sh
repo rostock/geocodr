@@ -6,4 +6,3 @@ curl -O -fsSL https://geo.sv.rostock.de/download/opendata/statistische_bezirke/s
 curl -O -fsSL https://geo.sv.rostock.de/download/opendata/strassen/strassen.json
 python $HERE/tocsv.py
 rm *.json
-

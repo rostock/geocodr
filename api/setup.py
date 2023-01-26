@@ -1,25 +1,23 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
-    name='geocodr',
-    description="Geocoder API for Solr",
-    version="0.3.2",
-    packages=find_packages(),
-    include_package_data=True,
-    entry_points={
-        'console_scripts': [
-            'geocodr=geocodr.cli:main',
-            'geocodr-api=geocodr.api:main',
-        ],
-    },
-    extras_require={
-        ':python_version == "2.7"': ['futures']
-    },
-    install_requires=[
-        'Werkzeug',
-        'requests',
-        'pyproj',
-        'shapely',
-        'waitress',
+  name='geocodr',
+  description='geocoder API for Apache Solr',
+  version='1.0.0',
+  python_requires='>=3',
+  packages=find_packages(),
+  include_package_data=True,
+  entry_points={
+    'console_scripts': [
+      'geocodr=geocodr.cli:main',
+      'geocodr-api=geocodr.api:main',
     ],
+  },
+  install_requires=[
+    'pyproj',
+    'requests',
+    'Shapely',
+    'waitress',
+    'Werkzeug',
+  ],
 )
