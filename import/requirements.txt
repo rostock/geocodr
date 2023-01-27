@@ -1,2 +1,2 @@
-kazoo
-six
+kazoo~=2.9.0
+six~=1.16.0
