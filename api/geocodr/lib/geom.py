@@ -19,7 +19,7 @@ def point_on_geom(geom):
   if geom.contains(c):
     return c
 
-  if geom.type == 'Polygon':
+  if geom.geom_type == 'Polygon':
     vcenter = (geom.bounds[1] + geom.bounds[3]) / 2
     hline = LineString([
       (geom.bounds[0] - 1.0, vcenter),
@@ -28,7 +28,7 @@ def point_on_geom(geom):
     intersections = geom.intersection(hline)
     return point_on_geom(intersections)
 
-  elif geom.type == 'MultiPolygon':
+  elif geom.geom_type == 'MultiPolygon':
     max_area = 0
     largest = None
     for polygon in geom.geoms:
@@ -39,7 +39,7 @@ def point_on_geom(geom):
 
     return point_on_geom(largest)
 
-  elif geom.type == 'MultiLineString':
+  elif geom.geom_type == 'MultiLineString':
     max_len = 0
     longest = None
     for linestring in geom.geoms:
@@ -49,10 +49,10 @@ def point_on_geom(geom):
         longest = linestring
     return point_on_geom(longest)
 
-  elif geom.type == 'LineString':
+  elif geom.geom_type == 'LineString':
     return geom.interpolate(0.5, normalized=True)
 
-  elif geom.type == 'MultiPoint':
+  elif geom.geom_type == 'MultiPoint':
     min_dist = 1e99
     closest = None
     for point in geom.geoms:

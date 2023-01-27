@@ -71,7 +71,7 @@ Geocodr comes with a command line tool for testing and debugging.
 
 Query for the borough `Stadtmitte`::
 
-   % geocodr --mapping example/geocodr_mapping.py 'stadtmitte'
+   % geocodr --mapping example/conf/geocodr_mapping.py 'stadtmitte'
    Rostock, Hanse- und Universitätsstadt, Stadtmitte I
    Rostock, Hanse- und Universitätsstadt, Stadtmitte II
    Rostock, Hanse- und Universitätsstadt, Stadtmitte III
@@ -88,7 +88,7 @@ Query for the borough `Stadtmitte`::
 
 To output the result as GeoJSON call::
 
-   % geocodr --mapping example/geocodr_mapping.py 'stadtmitte' --geojson
+   % geocodr --mapping example/conf/geocodr_mapping.py 'stadtmitte' --geojson
    {
    "features": [
       {

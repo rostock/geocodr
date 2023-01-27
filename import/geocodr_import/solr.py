@@ -65,7 +65,7 @@ class SolrCloud(object):
       'name': collection,
       'numShards': num_shards,
       'replicationFactor': replication_factor,
-      'maxShardsPerNode': 2,
+      'maxShardsPerNode': 4,
     }
     if config_name:
       params['collection.configName'] = config_name
