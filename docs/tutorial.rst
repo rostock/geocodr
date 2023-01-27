@@ -8,7 +8,7 @@ This document describes how to get started with Geocodr.
 This tutorial assumes that you have a working Geocodr and Solr Cloud installation.
 
 For Geocodr, make sure that the ``geocodr`` command works, otherwise read :doc:`install`.
-For Solr, we assume that you followed the `Getting Started With SolrCloud <https://lucene.apache.org/solr/guide/7_3/getting-started-with-solrcloud.html>`_ tutorial and that Solr is running on `localhost:8983` and the internal Zookeeper runs on `localhost:9983`. Adopt the host names and ports if your installation differs.
+For Solr, we assume that you followed the `Getting Started With SolrCloud <https://lucene.apache.org/solr/guide/7_3/getting-started-with-solrcloud.html>`_ tutorial and that Solr is running on `localhost:8983` and the internal Zookeeper runs on `localhost:2181`. Adopt the host names and ports if your installation differs.
 
 
 .. note:: We will create all required Solr collections in this tutorial (i.e. it is sufficient to run ``bin/solr -e cloud -noprompt``).
@@ -44,7 +44,7 @@ We use ``geocodr-zk`` to upload our configurations for both collections. The fol
 
 ::
 
-   geocodr-zk --zk-hosts localhost:9983 --config-dir example/solr/ --push ALL
+   geocodr-zk --zk-hosts localhost:2181 --config-dir example/solr/ --push ALL
 
 
 .. warning:: You can update existing config sets with the same command. Be aware that Solr will remove your index if you make changes to you schema as soon as you restart Solr or reload the Solr collection. You should re-import the data immediately with ``geocodr-post`` to be safe.
@@ -200,11 +200,11 @@ For convenience, you can use the ``geocodr-zk`` to pull and push the ``security.
 
 To pull the ``security.json`` file to ``example/solr/``::
 
-   geocodr-zk --zk-hosts localhost:9983 --config-dir example/solr/ --pull --security
+   geocodr-zk --zk-hosts localhost:2181 --config-dir example/solr/ --pull --security
 
 To push the ``security.json`` file from ``example/solr/``::
 
-   geocodr-zk --zk-hosts localhost:9983 --config-dir example/solr/ --push --security
+   geocodr-zk --zk-hosts localhost:2181 --config-dir example/solr/ --push --security
 
 
 Adding users can be accomplished by editing and `pushing` the ``security.json`` file, or by using the Solr REST-API::
