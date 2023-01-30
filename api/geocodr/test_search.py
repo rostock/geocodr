@@ -24,12 +24,12 @@ def test_ngram(input, boost, output):
 
 
 @pytest.mark.parametrize('input,boost,output', [
-  [u'', None, None],
-  [u'aß', None, "{!edismax qf=gramfield v='ass' mm='2<-1 4<-2 6<-3 8<-4'}^1.0"],
-  [u'aßa', None, "{!edismax qf=gramfield v='ass ssa' mm='2<-1 4<-2 6<-3 8<-4'}^0.5"],
-  [u'laekoerue', None,
+  ['', None, None],
+  ['aß', None, "{!edismax qf=gramfield v='ass' mm='2<-1 4<-2 6<-3 8<-4'}^1.0"],
+  ['aßa', None, "{!edismax qf=gramfield v='ass ssa' mm='2<-1 4<-2 6<-3 8<-4'}^0.5"],
+  ['laekoerue', None,
    "{!edismax qf=gramfield v='lak ako kor oru' mm='2<-1 4<-2 6<-3 8<-4'}^0.25"],
-  [u'quer', 2.0, "{!edismax qf=gramfield v='que uer' mm='2<-1 4<-2 6<-3 8<-4'}^1.0"],
+  ['quer', 2.0, "{!edismax qf=gramfield v='que uer' mm='2<-1 4<-2 6<-3 8<-4'}^1.0"],
 ])
 def test_german_ngram(input, boost, output):
   f = GermanNGramField('gramfield') ^ (boost or 1.0)

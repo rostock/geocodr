@@ -24,7 +24,7 @@ class SolrException(Exception):
         err_msg = resp.content
     except ValueError:
       err_msg = resp.content
-    Exception.__init__(self, u"error calling {}: {}".format(
+    Exception.__init__(self, "error calling {}: {}".format(
       resp.url, err_msg))
     self.resp = resp
 

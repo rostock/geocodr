@@ -93,8 +93,8 @@ class Collection(object):
       prop['_collection_'] = self.name
       prop['_class_'] = self.class_
       prop['_title_'] = self.to_title(prop)
-      prop[self.collection_title_attrib] = self.title
-      prop[self.class_title_attrib] = self.class_title
+      prop[self.collection_title_attrib] = self.title.encode('cp1252').decode('utf-8')
+      prop[self.class_title_attrib] = self.class_title.encode('cp1252').decode('utf-8')
 
       if shape == 'centroid':
         geom = point_on_geom(geom.centroid)
@@ -117,7 +117,7 @@ class Collection(object):
     for f in self.fields:
       if prop.get(f):
         parts.append(prop[f])
-    return u', '.join(parts)
+    return ', '.join(parts)
 
   def queries_for_term(self, term):
     """
@@ -140,18 +140,18 @@ class Collection(object):
     if any(is_exclusive(part) for part in parts):
       parts = [p for p in parts if is_exclusive(p)]
 
-    return u' OR '.join(parts)
+    return ' OR '.join(parts)
 
   def query(self, query):
     qparts = []
-    for term in query.split(u' '):
+    for term in query.split(' '):
       if not term:
         continue
       qparts.append(
-        u'_query_:"{{!maxscore tie=0}}({})"'.format(
+        '_query_:"{{!maxscore tie=0}}({})"'.format(
           self.queries_for_term(term))
       )
-    return u'{}'.format(u' AND '.join(qparts))
+    return '{}'.format(' AND '.join(qparts))
 
 
 class Class(object):
@@ -178,7 +178,7 @@ class NGramField(Field):
   def tokenize(self, curr_input):
     grams = []
     for n in range(self.min_gram, self.max_gram + 1):
-      grams.extend(u''.join(g)
+      grams.extend(''.join(g)
                    for g in zip(*[curr_input[i:] for i in range(n)]))
     return grams
 
@@ -187,9 +187,9 @@ class NGramField(Field):
     if not grams:
       return
     # mm 4<-2 -> if more then 4 terms, match at least all but 2 (e.g. 3 of 5)
-    return u"{{!edismax qf={0} v='{1}' mm='2<-1 4<-2 6<-3 8<-4'}}^{2:.2}".format(
+    return "{{!edismax qf={0} v='{1}' mm='2<-1 4<-2 6<-3 8<-4'}}^{2:.2}".format(
       self.field,
-      u' '.join(grams),
+      ' '.join(grams),
       # divide by number of grams as score and boost is applied for each
       # matched gram
       1.0 / len(grams) * self.boost,
@@ -202,13 +202,13 @@ class GermanNGramField(NGramField):
   """
 
   normalize_cases = {
-    u'ß': 'ss',
-    u'ä': 'a',
-    u'ae': 'a',
-    u'ö': 'o',
-    u'oe': 'o',
-    u'ü': 'u',
-    u'ue': 'u',
+    'ß': 'ss',
+    'ä': 'a',
+    'ae': 'a',
+    'ö': 'o',
+    'oe': 'o',
+    'ü': 'u',
+    'ue': 'u',
   }
   normalize_pat = re.compile('ß|ä|ae|ö|oe|ü|(?<![euioaq])ue')
 
@@ -234,7 +234,7 @@ class SimpleField(Field):
   def query(self, term):
     if not term:
       return
-    q = u'{}:{}'.format(self.field, term)
+    q = '{}:{}'.format(self.field, term)
     if self.boost != 1.0:
       q += '^{:.2}'.format(self.boost)
     return q
@@ -248,9 +248,9 @@ class PrefixField(Field):
   def query(self, term):
     if len(term) < self.min_term:
       return
-    q = u'{}:{}*'.format(self.field, term)
+    q = '{}:{}*'.format(self.field, term)
     if self.boost != 1.0:
-      q += u'^{:.2}'.format(self.boost)
+      q += '^{:.2}'.format(self.boost)
     return q
 
 

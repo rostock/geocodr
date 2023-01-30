@@ -160,7 +160,7 @@ def main():
       result.total_features, len(result.features), result.offset))
     for feature in result.features:
       if args.debug:
-        print(u'{:50s} {:9.6f}  {:18s} {}'.format(
+        print('{:50s} {:9.6f}  {:18s} {}'.format(
           feature['properties']['_title_'],
           feature['properties']['_score_'],
           feature['properties']['_collection_'],

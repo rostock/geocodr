@@ -19,14 +19,14 @@
 
 # -- Project information -----------------------------------------------------
 
-project = u'Geocodr'
-copyright = u'2018, Omniscale GmbH & Co. KG'
-author = u'Omniscale GmbH & Co. KG'
+project = 'Geocodr'
+copyright = '2018, Omniscale GmbH & Co. KG'
+author = 'Omniscale GmbH & Co. KG'
 
 # The short X.Y version
-version = u''
+version = ''
 # The full version, including alpha/beta/rc tags
-release = u''
+release = ''
 
 # -- General configuration ---------------------------------------------------
 
@@ -62,7 +62,7 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path .
-exclude_patterns = [u'_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
@@ -125,8 +125,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  (master_doc, 'Geocodr.tex', u'Geocodr Documentation',
-   u'Omniscale GmbH \\& Co. KG', 'manual'),
+  (master_doc, 'Geocodr.tex', 'Geocodr Documentation',
+   'Omniscale GmbH \\& Co. KG', 'manual'),
 ]
 
 # -- Options for manual page output ------------------------------------------
@@ -134,7 +134,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-  (master_doc, 'geocodr', u'Geocodr Documentation',
+  (master_doc, 'geocodr', 'Geocodr Documentation',
    [author], 1)
 ]
 
@@ -144,7 +144,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  (master_doc, 'Geocodr', u'Geocodr Documentation',
+  (master_doc, 'Geocodr', 'Geocodr Documentation',
    author, 'Geocodr', 'One line description of project.',
    'Miscellaneous'),
 ]
