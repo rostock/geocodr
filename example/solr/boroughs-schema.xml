@@ -43,13 +43,13 @@
   <fieldType name="plong" class="solr.LongPointField" docValues="true"/>
   <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true"/>
   <field name="_version_" type="plong" indexed="false" stored="false"/>
-  <field name="stat_bezirk_name" type="name_fold" stored="true"/>
-  <field name="stat_bezirk_name_ngram" type="name_ngram" stored="false"/>
+  <field name="bezeichnung" type="name_fold" stored="true"/>
+  <field name="bezeichnung_ngram" type="name_ngram" stored="false"/>
   <field name="gemeinde_name" type="gemeinde_name_fold" stored="true"/>
   <field name="gemeinde_name_ngram" type="gemeinde_name_ngram" stored="false"/>
   <field name="geometrie" type="location_xy_rpt" stored="false"/>
   <field name="id" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
   <field name="json" type="json" indexed="false" stored="true"/>
   <copyField source="gemeinde_name" dest="gemeinde_name_ngram"/>
-  <copyField source="stat_bezirk_name" dest="stat_bezirk_name_ngram"/>
+  <copyField source="bezeichnung" dest="bezeichnung_ngram"/>
 </schema>
