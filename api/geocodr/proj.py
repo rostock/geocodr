@@ -13,9 +13,9 @@ def epsg(code):
   Return Proj object for given EPSG `code`.
   """
   try:
-    return pyproj.CRS('{}'.format(code))
+    return pyproj.Proj('epsg:{}'.format(code))
   except RuntimeError:
-    raise ValueError('unknown {}'.format(code))
+    raise ValueError('unknown EPSG:{}'.format(code))
 
 
 def transform(src, dst, geom):
