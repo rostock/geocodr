@@ -93,8 +93,8 @@ class Collection(object):
       prop['_collection_'] = self.name
       prop['_class_'] = self.class_
       prop['_title_'] = self.to_title(prop)
-      prop[self.collection_title_attrib] = self.title.encode('cp1252').decode('utf-8')
-      prop[self.class_title_attrib] = self.class_title.encode('cp1252').decode('utf-8')
+      prop[self.collection_title_attrib] = self.title
+      prop[self.class_title_attrib] = self.class_title
 
       if shape == 'centroid':
         geom = point_on_geom(geom.centroid)
