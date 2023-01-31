@@ -13,7 +13,7 @@ def epsg(code):
   Return Proj object for given EPSG `code`.
   """
   try:
-    return pyproj.Proj('epsg:{}'.format(code))
+    return pyproj.Proj('+init=epsg:{}'.format(code))
   except RuntimeError:
     raise ValueError('unknown EPSG:{}'.format(code))
 
