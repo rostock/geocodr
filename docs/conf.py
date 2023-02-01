@@ -19,8 +19,8 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'Geocodr'
-copyright = '2018, Omniscale GmbH & Co. KG'
+project = 'geocodr'
+copyright = ''
 author = 'Omniscale GmbH & Co. KG'
 
 # The short X.Y version
@@ -99,7 +99,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Geocodrdoc'
+htmlhelp_basename = 'geocodrdoc'
 
 # -- Options for LaTeX output ------------------------------------------------
 
@@ -125,7 +125,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  (master_doc, 'Geocodr.tex', 'Geocodr Documentation',
+  (master_doc, 'geocodr.tex', 'geocodr documentation',
    'Omniscale GmbH \\& Co. KG', 'manual'),
 ]
 
@@ -134,7 +134,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-  (master_doc, 'geocodr', 'Geocodr Documentation',
+  (master_doc, 'geocodr', 'geocodr documentation',
    [author], 1)
 ]
 
@@ -144,7 +144,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  (master_doc, 'Geocodr', 'Geocodr Documentation',
-   author, 'Geocodr', 'One line description of project.',
-   'Miscellaneous'),
+  (master_doc, 'geocodr', 'geocodr documentation',
+   author, 'geocodr', 'One line description of project.',
+   'miscellaneous'),
 ]
