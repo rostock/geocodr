@@ -1,53 +1,50 @@
 Tutorial
 ========
 
+This document describes how to get started with *geocodr.*
 
-This document describes how to get started with Geocodr.
+This tutorial assumes that you have a working *geocodr* and *SolrCloud* installation.
 
+For *geocodr,* make sure that the ``geocodr`` command works, otherwise read :doc:`install`.
+For the *SolrCloud,* we assume that you followed the `Getting Started With SolrCloud <https://lucene.apache.org/solr/guide/8_11/getting-started-with-solrcloud.html>`_ tutorial and that *Apache Solr* is running on ``localhost:8983`` and the internal *Apache ZooKeeper* runs on ``localhost:2181``. Adopt the host names and ports if your installation differs.
 
-This tutorial assumes that you have a working Geocodr and Solr Cloud installation.
+.. note:: We will create all required *Apache Solr* collections in this tutorial (i.e. it is sufficient to run ``bin/solr -e cloud -noprompt``).
 
-For Geocodr, make sure that the ``geocodr`` command works, otherwise read :doc:`install`.
-For Solr, we assume that you followed the `Getting Started With SolrCloud <https://lucene.apache.org/solr/guide/7_3/getting-started-with-solrcloud.html>`_ tutorial and that Solr is running on `localhost:8983` and the internal Zookeeper runs on `localhost:2181`. Adopt the host names and ports if your installation differs.
-
-
-.. note:: We will create all required Solr collections in this tutorial (i.e. it is sufficient to run ``bin/solr -e cloud -noprompt``).
-
-.. note:: The SolrCloud installation from `Getting Started with SolrCloud` is not meant for production. Please refer to the Solr documentation for production setups.
+.. note:: The *SolrCloud* installation from the *Getting Started with SolrCloud* tutorial is not meant for production. Please refer to the *Apache Solr* documentation for production setups.
 
 Example data
 ------------
 
-The ``example`` directory contains a minimal set of Solr schema documents, Geocodr mappings and example data.
-The example dataset uses Open Data (CC0) from the city Rostock in German. Please note that field names are in German.
+The ``example`` directory contains a minimal set of *Apache Solr* schema documents, *geocodr* mappings and example data.
+The example dataset uses open data (CC0) from the german city Rostock. Please note that field names are in German.
 
 We will create two collections:
 
-- `boroughs` with polygon geometries of statistical boroughs with the city name (gemeinde_name) and borough name (stat_bezirk_name).
-- `streets` with line geometries of streets with street name (strasse_name), city name (gemeinde_name) and borough name (stat_bezirk_name).
+- ``boroughs`` with polygon geometries of statistical boroughs with the city name (``gemeinde_name``) and borough name (``bezeichnung``).
+- ``streets`` with line geometries of streets with street name (``strasse_name``), city name (``gemeinde_name``) and borough name (``stat_bezirk_name``).
 
 Both collections will also contain a geometry as WKT and a JSON dump of all available fields for retrieval (but not for search).
 
-Both collections will belong to the same `address` class.
+Both collections will belong to the same ``address`` class.
 
-We will use the schema files ``example/solr/boroughs-schema.xml`` and ``example/solr/streets-schema.xml``. These are standard Solr XML schemas.
+We will use the schema files ``example/solr/boroughs-schema.xml`` and ``example/solr/streets-schema.xml``. These are standard *Apache Solr* XML schemas.
 
-For Geocodr, it does not matter how the schema is managed and how the data is imported into Solr. However, you can use the ``geocodr-zk`` and ``geocodr-post`` tools for a simplified workflow. This workflow requires that your input data is available as CSV and that it is sufficient to make complete re-imports, instead of live updates.
+For *geocodr,* it does not matter how the schema is managed and how the data is imported into *Apache Solr.* However, you can use the ``geocodr-zk`` and ``geocodr-post`` tools for a simplified workflow. This workflow requires that your input data is available as CSV and that it is sufficient to make complete re-imports, instead of live updates.
 
 
 Create config sets
 ------------------
 
-We use ``geocodr-zk`` to upload our configurations for both collections. The following command creates the `boroughs` and `streets` config sets [#cs]_ in Zookeeper and uploads the ``solrconfig.xml`` and the correspondent schema file.
+We use ``geocodr-zk`` to upload our configurations for both collections. The following command creates the ``boroughs`` and ``streets`` config sets [#cs]_ in *Apache ZooKeeper* and uploads the ``solrconfig.xml`` and the correspondent schema file.
 
-.. [#cs] Config sets are `described in the Solr documentation <https://lucene.apache.org/solr/guide/7_3/config-sets.html>`_. However, the config sets are managed with Zookeeper for SolrCloud and not as files in ``$SOLR_HOME/configsets``.
+.. [#cs] Config sets are `described in the Apache Solr documentation <https://lucene.apache.org/solr/guide/8_11/config-sets.html>`_. However, the config sets are managed with *Apache ZooKeeper* for *SolrCloud* and not as files in ``$SOLR_HOME/configsets``.
 
 ::
 
    geocodr-zk --zk-hosts localhost:2181 --config-dir example/solr/ --push ALL
 
 
-.. warning:: You can update existing config sets with the same command. Be aware that Solr will remove your index if you make changes to you schema as soon as you restart Solr or reload the Solr collection. You should re-import the data immediately with ``geocodr-post`` to be safe.
+.. warning:: You can update existing config sets with the same command. Be aware that *Apache Solr* will remove your index if you make changes to your schema as soon as you restart *Apache Solr* or reload the *Apache Solr* collection. You should re-import the data immediately with ``geocodr-post`` to be safe.
 
 Import data
 -----------
@@ -60,7 +57,7 @@ We use ``geocodr-post`` to upload the example data into the appropriate collecti
    geocodr-post --url http://localhost:8983/solr --csv example/csv/streets.csv --collection streets
 
 
-Please note that the first call imports the boroughs into the `boroughs-1` collection. If the data is successfully imported, then it will create an alias `boroughs` pointing to `boroughs-1`. A second call will import the boroughs into the `boroughs-2` collection and it will update the alias atomically to point to the new collection. Further calls will alternate between the `-1` and `-2` suffix. This allows you to re-import the data in production without any downtime.
+Please note that the first call imports the boroughs into the ``boroughs-1`` collection. If the data is successfully imported, then it will create an alias ``boroughs`` pointing to ``boroughs-1``. A second call will import the boroughs into the ``boroughs-2`` collection and it will update the alias atomically to point to the new collection. Further calls will alternate between the ``-1`` and ``-2`` suffix. This allows you to re-import the data in production without any downtime.
 
 
 First queries
